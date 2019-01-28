@@ -9,10 +9,11 @@ const REQUEST_CODE = 1;
 
 export default class Navigation extends Component {
   static navigationItem = {
-    //topBarStyle: 'light-content',
-    //topBarColor: '#666666',
-    //topBarTintColor: '#ffffff',
-    //titleTextColor: '#ffffff',
+
+    topBarHidden: true,
+    backButtonHidden: true,
+    backInteractive: true,
+
     titleItem: {
       title: 'RN navigation',
     },

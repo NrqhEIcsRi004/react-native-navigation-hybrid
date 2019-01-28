@@ -4,6 +4,7 @@ import {
   Navigator,
   router,
   BarStyleDarkContent,
+  BarStyleLightContent,
   TitleAlignmentCenter,
 } from 'react-native-navigation-hybrid';
 import { Image, Platform } from 'react-native';
@@ -34,6 +35,7 @@ import ReactModal from './src/ReactModal';
 import StatusBarHidden from './src/StatusBarHidden';
 import CustomTabBar from './src/CustomTabBar';
 import BulgeTabBar from './src/BulgeTabBar';
+import Welcome from './src/Welcome';
 
 // import MessageQueue from 'react-native/Libraries/BatchedBridge/MessageQueue.js';
 // const spyFunction = msg => {
@@ -41,35 +43,7 @@ import BulgeTabBar from './src/BulgeTabBar';
 // };
 // MessageQueue.spy(spyFunction);
 
-// 设置全局样式
-Garden.setStyle({
-  screenBackgroundColor: '#F8F8F8',
-  topBarStyle: BarStyleDarkContent,
-  titleTextSize: 17,
-  topBarColor: '#FFFFFF',
 
-  swipeBackEnabledAndroid: true,
-  topBarTintColor: '#000000',
-  // badgeColor: '#00FFFF',
-  // titleTextColor: '#00ff00',
-  titleAlignmentAndroid: TitleAlignmentCenter,
-  // backIcon: Image.resolveAssetSource(require('./src/images/ic_settings.png')),
-  shadowImage: {
-    color: '#DDDDDD',
-    // image: Image.resolveAssetSource(require('./src/images/divider.png')),
-  },
-  // hideBackTitleIOS: true,
-  elevationAndroid: 1,
-
-  tabBarColor: '#FFFFFF',
-  tabBarShadowImage: {
-    color: '#F0F0F0',
-    // image: Image.resolveAssetSource(require('./src/images/divider.png')),
-  },
-
-  //tabBarItemColor: '#CCCCCC',
-  //tabBarSelectedItemColor: '#00ff00',
-});
 
 function withRedux(WrappedComponent) {
   class ReduxProvider extends Component {
@@ -93,6 +67,7 @@ function withRedux(WrappedComponent) {
 // 开始注册组件，即基本页面单元
 ReactRegistry.startRegisterComponent(withRedux);
 
+ReactRegistry.registerComponent('Welcome', () => Welcome);
 ReactRegistry.registerComponent('Navigation', () => Navigation);
 ReactRegistry.registerComponent('Result', () => Result, { path: 'result', mode: 'present' });
 ReactRegistry.registerComponent('Options', () => Options, { path: 'options' });
@@ -129,42 +104,8 @@ ReactRegistry.registerComponent('BulgeTabBar', () => BulgeTabBar);
 // 完成注册组件
 ReactRegistry.endRegisterComponent();
 
-const navigationStack = {
-  stack: {
-    children: [{ screen: { moduleName: 'Navigation' } }],
-  },
-};
 
-const optionsStack = {
-  stack: {
-    children: [{ screen: { moduleName: 'Options' } }],
-  },
-};
 
-const tabs = {
-  tabs: {
-    children: [navigationStack, optionsStack],
-    options: {
-      //tabBarModuleName: 'BulgeTabBar',
-      //sizeIndeterminate: true,
-      //tabBarModuleName: 'CustomTabBar',
-      //sizeIndeterminate: false,
-      //selectedIndex: 1,
-    },
-  },
-};
-
-const menu = { screen: { moduleName: 'Menu' } };
-
-const drawer = {
-  drawer: {
-    children: [tabs, menu],
-    options: {
-      maxDrawerWidth: 280,
-      minDrawerMargin: 64,
-    },
-  },
-};
 
 // 激活 DeepLink，在 Navigator.setRoot 之前
 Navigator.setRootLayoutUpdateListener(
@@ -177,8 +118,52 @@ Navigator.setRootLayoutUpdateListener(
   }
 );
 
-// 设置 UI 层级
-Navigator.setRoot(drawer);
+
+
+function startApp() {
+
+  // 设置全局样式
+  Garden.setStyle({
+    screenBackgroundColor: '#F8F8F8',
+    topBarStyle: BarStyleLightContent,
+    titleTextSize: 17,
+    topBarColor: '#FFFFFF',
+
+    swipeBackEnabledAndroid: true,
+    topBarTintColor: '#000000',
+    // badgeColor: '#00FFFF',
+    // titleTextColor: '#00ff00',
+    titleAlignmentAndroid: TitleAlignmentCenter,
+    // backIcon: Image.resolveAssetSource(require('./src/images/ic_settings.png')),
+    shadowImage: {
+      color: '#DDDDDD',
+      // image: Image.resolveAssetSource(require('./src/images/divider.png')),
+    },
+    // hideBackTitleIOS: true,
+    elevationAndroid: 1,
+
+    tabBarColor: '#FFFFFF',
+    tabBarShadowImage: {
+      color: '#F0F0F0',
+      // image: Image.resolveAssetSource(require('./src/images/divider.png')),
+    },
+
+    //tabBarItemColor: '#CCCCCC',
+    //tabBarSelectedItemColor: '#00ff00',
+  });
+
+
+  Navigator.setRoot({
+    stack: {
+      children: [{screen: {moduleName: 'Welcome'}}]
+    }
+  })
+}
+
+startApp()
+
+
+
 
 // 设置导航拦截器
 Navigator.setInterceptor((action, from, to, extras) => {
